@@ -1,0 +1,12 @@
+# Compilados (Maven)
+/target/
+
+# Configurações de IDE (IntelliJ, Eclipse, VS Code)
+.idea/
+*.iml
+.settings/
+.project
+.classpath
+
+# Logs e arquivos temporários
+*.log

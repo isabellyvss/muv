@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Muv</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .form {
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+
+        .form input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+        }
+
+        .form button {
+            margin-top: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: #0b2c5a;
+            color: white;
+            cursor: pointer;
+        }
+
+        .list {
+            display: grid;
+            gap: 15px;
+        }
+
+        .item {
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .item b {
+            color: #0b2c5a;
+        }
+
+        .item button {
+            background: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Admin - Muv</h2>
+
+    <div class="form">
+        <input id="type" placeholder="type (hero, price, roteiro, dicas)">
+        <input id="title" placeholder="title">
+        <input id="content" placeholder="content">
+        <input id="imageUrl" placeholder="image url (hero only)">
+        <button onclick="create()">Criar</button>
+    </div>
+
+    <div class="list" id="list"></div>
+
+</div>
+
+<script>
+    function load() {
+        fetch("http://localhost:8080/sections")
+            .then(res => res.json())
+            .then(data => {
+
+                const div = document.getElementById("list");
+                div.innerHTML = "";
+
+                data.forEach(s => {
+                    div.innerHTML += `
+          <div class="item">
+            <div>
+              <b>${s.type}</b><br>
+              ${s.title}
+            </div>
+            <button onclick="del(${s.id})">Excluir</button>
+          </div>
+        `;
+                });
+
+            });
+    }
+
+    function create() {
+        fetch("http://localhost:8080/sections", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                type: document.getElementById("type").value,
+                title: document.getElementById("title").value,
+                content: document.getElementById("content").value,
+                imageUrl: document.getElementById("imageUrl").value
+            })
+        }).then(() => load());
+    }
+
+    function del(id) {
+        fetch("http://localhost:8080/sections/" + id, {
+            method: "DELETE"
+        }).then(() => load());
+    }
+
+    load();
+</script>
+
+</body>
+</html>
